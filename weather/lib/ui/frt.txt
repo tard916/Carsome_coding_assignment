@@ -1,0 +1,67 @@
+body: ListView(
+            children: <Widget>[
+              textFieldView(),
+              Container(
+                child: FutureBuilder<WeatherModel>(
+                  builder: (BuildContext context,
+                      AsyncSnapshot<WeatherModel> snapshot) {
+                    if (snapshot.hasData) {
+                      return Column(children: <Widget>[
+                        weatherView(snapshot),
+                      ]);
+                    } else {
+                      return Container(
+                        child: Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                      );
+                    }
+                  },
+                  future: weatherObject,
+                ),
+              ),
+            ],
+          ),
+          bottomNavigationBar: BottomNavigationBar(
+            currentIndex: _currentIndex,
+            backgroundColor: Colors.white60,
+            items: [
+              BottomNavigationBarItem(
+                  icon: Icon(FontAwesomeIcons.locationArrow),
+                  title: Text('Now'),
+                  backgroundColor: Colors.blueGrey),
+              BottomNavigationBarItem(
+                  icon: Icon(FontAwesomeIcons.calendarAlt),
+                  title: Text('Forecast'),
+                  backgroundColor: Colors.blueGrey),
+              BottomNavigationBarItem(
+                  icon: Icon(FontAwesomeIcons.car),
+                  title: Text('Carsome'),
+                  backgroundColor: Colors.blueGrey),
+            ],
+            // onTap: (index) => {
+            //   setState(() {
+            //     _currentIndex = index;
+            //   })
+            // },
+          ),
+
+Widget textFieldView() {
+    return Padding(
+      padding: const EdgeInsets.all(12.0),
+      child: Container(
+        child: DropdownButton<String>(
+          value: dropdownValue,
+          onChanged: (String newValue) {
+            provider.of(ct).setSelectedCity(newValue);
+          },
+          items: provider.items.map<DropdownMenuItem<String>>((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Text(value),
+            );
+          }).toList(),
+        ),
+      ),
+    );
+  }
